@@ -6,7 +6,7 @@ def median_number_array(*arrays):
     Time Complexity: O(n log n) due to sorting.
     Space Complexity: O(n) since all values are stored in a list.
     """
-     
+    
     # creates empty list to store all numbers in the arrays
     numbers = []
 
@@ -17,6 +17,10 @@ def median_number_array(*arrays):
         
         # extends the list of numbers with the values in each array
         numbers.extend(array)
+
+    # if numbers list is empty raise an error
+    if not numbers:
+        raise ValueError("The input arrays contain no valid numbers.")
 
     # sorts all values in ascending order
     numbers.sort()

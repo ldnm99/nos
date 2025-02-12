@@ -14,30 +14,41 @@ def merge_intervals(intervals):
     Space Complexity: O(n) in the worst case (if no intervals merge).
     """
 
-    # If the input list is empty, return an empty list
+    # if the input list is empty, return an empty list
     if not intervals:
         return []
 
-    # Sort the intervals based on the start time (first value in each pair)
-    # Sorting ensures that overlapping intervals are adjacent in the list.
+    # if each interval is a valid list or tuple of two elements
+    for interval in intervals:
+        if not isinstance(interval, (list, tuple)) or len(interval) != 2:
+            raise ValueError("Each interval must have two elements.")
+        
+        start, end = interval
+        # if both start and end are integers or floats
+        if not all(isinstance(x, (int, float)) for x in interval):
+            raise ValueError("All elements in the arrays must be integers or floats.")
+        
+        # if the start value is greater than the end value
+        if start > end:
+            raise ValueError("Start value cannot be greater than end value.")
+        
+    # sort the intervals based on the start value 
     intervals.sort(key = lambda x: x[0])
 
-    # Initialize the final list with the start value of the first interval aka the lowest boundary
+    # final list with the start value of the first interval aka the lowest boundary
     final = [intervals[0]]
 
-    # Iterate over the remaining intervals
     for start, end in intervals[1:]:
-        # Get the last interval in the final list
+        # last interval in the final list
         last_start, last_end = final[-1]
 
-        # Check if the current interval overlaps with the last final interval
+        # if the current interval overlaps with the last final interval
         if start <= last_end:
-            # Merge overlapping intervals by updating the last interval's end time
-            # The new end time is the max of the current interval's end and the last final interval's end
+            # merge overlapping intervals by updating the last interval end
+            # new end value is the max of the current interval end and the last final interval 
             final[-1] = [last_start, max(last_end, end)]
         else:
-            # If no overlap, add the current interval as a new entry in the final list
+            # if no overlap add the interval in the final list
             final.append([start, end])
 
-    # Return the list of final intervals
     return final

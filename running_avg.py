@@ -31,16 +31,7 @@ def running_average(numbers):
 
     # Iterate over the list, keeping track of index and number
     for index, number in enumerate(numbers):
-        total  += number                    # Update the cumulative sum
-        average = total / (index + 1)       # Compute the running average
-        print(f"Current number: {number}, Running average: {average:.2f}") # Output the result rounding the average to 2 decimal places 
+        total  += number                         # Update the cumulative sum
+        average = round(total / (index + 1), 2)  # Compute the running average
+        print(f"Current number: {number:.2f}, Running average: {average:.2f}") # Output the result rounding the average to 2 decimal places 
         print() 
-
-def main():
-    # Example usage
-    numbers = [0.5, 3.0, 7.5, 14.0, 22.5, 33.0, 45.5, 60.0, 76.5, 95.0, 115.5, 138.0, 
-      162.5, 189.0, 217.5, 248.0, 280.5, 315.0, 351.5]
-    running_average(numbers)
-
-if __name__ == "__main__":
-    main()

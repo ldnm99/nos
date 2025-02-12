@@ -37,7 +37,6 @@ def is_valid_bracket_sequence(s: str) -> bool:
     # If the stack is empty at the end, all brackets were properly matched
     return not stack
 
-
 def validate_brackets(s: str) -> None:
     """
     Validates the bracket sequence in a given string and prints the result.
@@ -53,4 +52,3 @@ def validate_brackets(s: str) -> None:
         print("The string is valid.")
     else:
         print("Error: The string contains invalid brackets.")
-
