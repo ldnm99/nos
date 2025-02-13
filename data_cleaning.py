@@ -147,8 +147,7 @@ def correlation_matrix(df, numerical_columns):
 def main():
     # the file imports-85.names contains the names of the columns in the dataset
     # the file imports-85.data contains the data in the dataset
-    # File paths
-    names_file = r"C:\Users\lourencomarvao\nos\data\imports-85.names"
+    # File path
     data_file  = r"C:\Users\lourencomarvao\nos\data\imports-85.data"
 
     column_names = ['symboling', 'normalized-losses', 'make', 'fuel-type', 'aspiration',

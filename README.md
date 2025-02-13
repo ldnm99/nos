@@ -86,6 +86,7 @@ python dummy_sql_data.py
 ```
 python queries_explained.py
 ```
+
 ## Setting Up the Database
 
 To create the database, run the `create_database.sql` script in an SQLite database. To execute the script, use the following steps:
@@ -99,3 +100,47 @@ If you'd like to run the tests for the project, use pytest to ensure everything 
 ```
 pytest test_algorithms.py
 ```
+
+## Considerations
+1. Algorithm Development:
+I began by developing the Python scripts for the algorithms. After completing the scripts and conducting testing, I proceeded with the SQL exercise.
+
+2. Testing the SQL Queries:
+To ensure the correctness of my SQL queries, I decided to create a test database. I created a script, dummy_sql_data.py, which uses SQLite (since it's pre-installed) to generate a dummy database.
+
+3. Core Task:
+Once the algorithms and SQL tasks were completed, I focused on the core task.
+
+4. Data Preparation:
+
+I manually downloaded the necessary files and added them to the data folder of the project.
+Upon opening the files, I realized that the column names, value ranges, and data types could be found in the .names file.
+After successfully reading the data with the appropriate column names, I proceeded to address missing values and incorrect data types.
+
+5. Data Type and Value Transformation:
+
+I noticed that two columns contained data that should have been numerical but were represented as strings. I mapped these string values to their corresponding numerical values.
+The missing values were represented as "?" rather than NaN, so I converted these question marks into NaN to properly handle the missing data.
+
+6. Handling Missing Data:
+
+With the data now in the correct format and all missing values converted to NaN, I focused on handling these missing values.
+
+7. Choosing a Method for Missing Values:
+
+I opted for the median imputation method instead of more complex machine learning approaches. This decision was driven by the fact that most missing values were concentrated in one column, and a simpler approach would be sufficient for low complexity.
+It’s worth noting that no comparison between other methods (like mode, mean, KNN, regression, or data dropping) was conducted. The median is a reliable, robust method that is less affected by outliers.
+
+8. Outlier Detection:
+
+To detect outliers, I used the Z-score method, which standardizes the data and identifies values significantly different from the mean (most effective with normally distributed data).
+Additionally, I created box plots for a visual representation of the outliers. Through this analysis, I concluded that the outliers were valid data points and represented at most ±5% of the data in a column. This insight allows for potential machine learning techniques, such as using a log scaler, to reduce the influence of outliers.
+
+9. Correlation Analysis:
+
+I then explored the correlations between the columns to identify which attributes had positive or negative relationships with one another.
+
+10. Further Analysis:
+
+While further analysis could have been conducted (e.g., finding the number of BMW cars or identifying the most expensive cars), this was not performed in this particular task.
+Regarding the automation of the ETL process using Apache Airflow, since I wasn’t fully familiar with it, I didn’t dive deeply into learning it. However, from the documentation I reviewed, it seems that a DAG file is created where each task, such as handling missing values (which should be in its own .py file), is added and scheduled to run in a specific order. From what I understand, this will be helpful for automating and scheduling the ETL process in my own project, so I won’t have to manually run the .py script every friday to fetch data for my football league from the premier league API.
