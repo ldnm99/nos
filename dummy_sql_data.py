@@ -88,5 +88,8 @@ cursor.executemany("INSERT INTO tb_reference_salary VALUES (?, ?, ?, ?)", refere
 conn.commit()
 conn.close()
 
-print("Dummy data created")
+print(f"Inserted {len(employees)} employees")
+print(f"Inserted {len(salaries)} salary records")
+print(f"Inserted {len(reference_salaries)} reference salary records")
+print("Database setup complete!")
 

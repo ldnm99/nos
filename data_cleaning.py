@@ -144,80 +144,85 @@ def correlation_matrix(df, numerical_columns):
     plt.title('Pearson Correlation Matrix')
     plt.show()
     
-# the file imports-85.names contains the names of the columns in the dataset
-# the file imports-85.data contains the data in the dataset
-# File paths
-names_file = r"C:\Users\lourencomarvao\nos\data\imports-85.names"
-data_file  = r"C:\Users\lourencomarvao\nos\data\imports-85.data"
+def main():
+    # the file imports-85.names contains the names of the columns in the dataset
+    # the file imports-85.data contains the data in the dataset
+    # File paths
+    names_file = r"C:\Users\lourencomarvao\nos\data\imports-85.names"
+    data_file  = r"C:\Users\lourencomarvao\nos\data\imports-85.data"
 
-column_names = ['symboling', 'normalized-losses', 'make', 'fuel-type', 'aspiration',
- 'num-of-doors', 'body-style', 'drive-wheels', 'engine-location',
- 'wheel-base', 'length', 'width', 'height', 'curb-weight', 'engine-type',
- 'num-of-cylinders', 'engine-size', 'fuel-system', 'bore', 'stroke',
- 'compression-ratio', 'horsepower', 'peak-rpm', 'city-mpg', 'highway-mpg', 'price']
+    column_names = ['symboling', 'normalized-losses', 'make', 'fuel-type', 'aspiration',
+     'num-of-doors', 'body-style', 'drive-wheels', 'engine-location',
+     'wheel-base', 'length', 'width', 'height', 'curb-weight', 'engine-type',
+     'num-of-cylinders', 'engine-size', 'fuel-system', 'bore', 'stroke',
+     'compression-ratio', 'horsepower', 'peak-rpm', 'city-mpg', 'highway-mpg', 'price']
 
-# read the dataset 
-df = pd.read_csv(data_file, names=column_names)
+    # read the dataset 
+    df = pd.read_csv(data_file, names=column_names)
 
-# analyze the dataset
-analyze_dataset(df)
+    # analyze the dataset
+    analyze_dataset(df)
 
-# analyze missing values in the dataset
-print('----------------------------Missing Values----------------------------------------')  
-analyze_missing_values(df)
+    # analyze missing values in the dataset
+    print('----------------------------Missing Values----------------------------------------')  
+    analyze_missing_values(df)
+
+    # Assumption:
+    # 1. The missing values are just unknown values and not errors in the dataset.
+
+    # mapping the columns to the correct data
+    df = mapping_columns(df)
+
+    # convert the columns to the correct dtype
+    df = converter(df)
+
+    # now the data is ready to deal with the missing values
+    # there are different ways to handle missing values such as:
+    #   - deleting the column with missing values, 
+    #   - deleting the rows   with missing values, 
+    #   - filling the missing values with the mean, median or frequency of values in the column
+    #   - using a model like knn to predict the missing values
+
+    # fill the missing values with the mean of the column using the fill_missing_values function
+    df = fill_missing_values(df, 'normalized-losses', 'bore', 'stroke', 'horsepower', 'peak-rpm', 'price')
+
+    # all that remains is handle the 2 missing values in the 'num-of-doors' column
+    # i used the frequency of the column to fill the missing values and changed the dtype to int from float
+    frequency_result   = stats.mode(df['num-of-doors'], nan_policy='omit') 
+    df['num-of-doors'] = df['num-of-doors'].fillna(frequency_result[0])
+    df['num-of-doors'] = df['num-of-doors'].astype('int')
+
+    # count the new missing values
+    print('----------------------------New Missing Values----------------------------------------')  
+    analyze_missing_values(df)
+    print('----------------------------Data Cleaning Done!---------------------------------------')
+
+    # find outliers using the z-score method
+    # using the numerical columns
+    numerical_columns = df.select_dtypes(include=['float', 'int']).columns
+    outliers_zscore   = find_outliers_zscore(df, numerical_columns)
+
+    report_outliers(outliers_zscore, df)
+
+    # Assumption:
+    # 2. The outliers are valid data points and not errors in the dataset.
+    # 3. The outliers are in the data range given in imports-85.names.
+    # 4. The outliers are significant data points that should not be removed.
+    # 5. The number of outliers is not too high to affect the analysis and future model training.
+
+    # The data is now cleaned and ready for further analysis.
+
+    # Start by identifying which features are most important in the price of a car by computing the correlation matrix.
+
+    # correlation matrix using Pearson correlation
+    correlation_matrix(df, numerical_columns)
+
+    # The correlation matrix shows the relationship between the numerical columns in the dataset.
+    # More specifically: 'engine-size', 'curb-weight' have the strongest positive correlation with 'price' while surprisingly 'symboling', 'num-of-doors' and 'stroke' have basically no influence on the price.
+    # The columns 'city-mpg' and 'highway-mpg' have a strong negative correlation with 'price' which means as the miles per gallon increase the price decreases.
+    # Cars with bigger engines have more horsepower and are heavier.
+    # Cars with large width and legth are heavier and have lower mpg aka fuel efficiency.
+
+if __name__ == "__main__":
+    main()
     
-# Assumption:
-# 1. The missing values are just unknown values and not errors in the dataset.
-
-# mapping the columns to the correct data
-df = mapping_columns(df)
-
-# convert the columns to the correct dtype
-df = converter(df)
-
-# now the data is ready to deal with the missing values
-# there are different ways to handle missing values such as:
-#   - deleting the column with missing values, 
-#   - deleting the rows   with missing values, 
-#   - filling the missing values with the mean, median or frequency of values in the column
-#   - using a model like knn to predict the missing values
-
-# fill the missing values with the mean of the column using the fill_missing_values function
-df = fill_missing_values(df, 'normalized-losses', 'bore', 'stroke', 'horsepower', 'peak-rpm', 'price')
-
-# all that remains is handle the 2 missing values in the 'num-of-doors' column
-# i used the frequency of the column to fill the missing values and changed the dtype to int from float
-frequency_result   = stats.mode(df['num-of-doors'], nan_policy='omit') 
-df['num-of-doors'] = df['num-of-doors'].fillna(frequency_result[0])
-df['num-of-doors'] = df['num-of-doors'].astype('int')
-
-# count the new missing values
-print('----------------------------New Missing Values----------------------------------------')  
-analyze_missing_values(df)
-print('----------------------------Data Cleaning Done!---------------------------------------')
-
-# find outliers using the z-score method
-# using the numerical columns
-numerical_columns = df.select_dtypes(include=['float', 'int']).columns
-outliers_zscore   = find_outliers_zscore(df, numerical_columns)
-
-report_outliers(outliers_zscore, df)
-
-# Assumption:
-# 2. The outliers are valid data points and not errors in the dataset.
-# 3. The outliers are in the data range given in imports-85.names.
-# 4. The outliers are significant data points that should not be removed.
-# 5. The number of outliers is not too high to affect the analysis and future model training.
-
-# The data is now cleaned and ready for further analysis.
-
-# Start by identifying which features are most important in the price of a car by computing the correlation matrix.
-
-# correlation matrix using Pearson correlation
-correlation_matrix(df, numerical_columns)
-
-# The correlation matrix shows the relationship between the numerical columns in the dataset.
-# More specifically: 'engine-size', 'curb-weight' have the strongest positive correlation with 'price' while surprisingly 'symboling', 'num-of-doors' and 'stroke' have basically no influence on the price.
-# The columns 'city-mpg' and 'highway-mpg' have a strong negative correlation with 'price' which means as the miles per gallon increase the price decreases.
-# Cars with bigger engines have more horsepower and are heavier.
-# Cars with large width and legth are heavier and have lower mpg aka fuel efficiency.

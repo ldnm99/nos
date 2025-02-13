@@ -1,3 +1,6 @@
+import sys
+import ast
+
 def running_average(numbers):
     """
     Computes and prints the running average of a list of numbers.
@@ -35,3 +38,18 @@ def running_average(numbers):
         average = round(total / (index + 1), 2)  # Compute the running average
         print(f"Current number: {number:.2f}, Running average: {average:.2f}") # Output the result rounding the average to 2 decimal places 
         print() 
+
+
+# to run the code, pass a list of numbers as a command-line argument
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Please provide a list of numbers as an argument.")
+        sys.exit(1)
+    
+    try:
+        input_numbers = ast.literal_eval(sys.argv[1])  # Safely parse the list
+        if not isinstance(input_numbers, list):
+            raise ValueError("Input must be a list.")
+        running_average(input_numbers)
+    except (ValueError, SyntaxError):
+        print("Invalid input. Please provide a valid list of numbers.")

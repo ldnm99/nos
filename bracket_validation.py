@@ -1,3 +1,5 @@
+import sys
+
 def is_valid_bracket_sequence(s: str) -> bool:
     """
     Checks if a given string contains a valid sequence of brackets.
@@ -52,3 +54,12 @@ def validate_brackets(s: str) -> None:
         print("The string is valid.")
     else:
         print("Error: The string contains invalid brackets.")
+
+# to run the code, pass a string with brackets as a command-line argument
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Please provide a string with brackets.")
+        sys.exit(1)
+    
+    input_string = sys.argv[1]
+    validate_brackets(input_string)

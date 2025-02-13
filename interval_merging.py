@@ -1,3 +1,6 @@
+import sys
+import ast
+
 def merge_intervals(intervals):
     """
     Merges overlapping intervals in a list.
@@ -52,3 +55,17 @@ def merge_intervals(intervals):
             final.append([start, end])
 
     return final
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Please provide a list of intervals as an argument.")
+        sys.exit(1)
+    
+    try:
+        input_intervals = ast.literal_eval(sys.argv[1])  # parse the input string as a list
+        if not isinstance(input_intervals, list):
+            raise ValueError("Input must be a list of intervals.")
+        merged_intervals = merge_intervals(input_intervals)
+        print("Merged Intervals:", merged_intervals)
+    except (ValueError, SyntaxError):
+        print("Invalid input. Please provide a valid list of intervals.")

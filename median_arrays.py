@@ -1,3 +1,6 @@
+import sys
+import ast
+
 def median_number_array(*arrays):
     """
     Computes the median of multiple numeric arrays combined.
@@ -32,3 +35,17 @@ def median_number_array(*arrays):
         return numbers[n // 2]
     else:           # if number of values is even,the median is the average of the two middle values
         return (numbers[n // 2 - 1] + numbers[n // 2]) / 2
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Please provide a list of numeric arrays.")
+        sys.exit(1)
+
+    try:
+        input_arrays = ast.literal_eval(sys.argv[1])  # parse the input as a list
+        if not isinstance(input_arrays, list) or not all(isinstance(arr, list) for arr in input_arrays):
+            raise ValueError("Input must be a list of numeric arrays.")
+        median = median_number_array(*input_arrays)
+        print("Median:", median)
+    except (ValueError, SyntaxError):
+        print("Invalid input. Please provide a valid list of numeric arrays.")
